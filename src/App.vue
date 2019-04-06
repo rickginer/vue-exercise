@@ -2,23 +2,13 @@
   <div id="app">
     <Card>
       <template slot="title">
-        Question
+        How many **active** retailers do we have?
       </template>
 
       <template slot="content">
-        Answer to question
+        {{ activeRetailers.length }}
       </template>
     </Card>
-
-    <h2>Retailers</h2>
-    <table>
-      <tr v-for="(retailer) in retailers" :key="retailer.retailerId">
-        <td>{{ retailer.retailerId }}</td>
-        <td>{{ retailer.name }}</td>        
-      </tr>
-    </table>
-
-
   </div>
 </template>
 <script>
@@ -38,6 +28,11 @@ export default {
       retailers: retailers,
       ordersVic: ordersVic,
       ordersNsw: ordersNsw
+    }
+  },
+  computed: {
+    activeRetailers: () => {
+      return retailers.filter(value => value.active === true)
     }
   }
 }
