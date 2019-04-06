@@ -24,7 +24,7 @@ export default {
 .card {
   display: flex;
   flex-direction: column;
-  margin: 2px;
+  margin: 2px 2px 20px 2px;
   border: solid 1px #ccc;
   border-radius: 4px;
   box-shadow: 0px 0px 5px -1px rgba(0,0,0,0.75);
