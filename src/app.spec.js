@@ -13,4 +13,16 @@ describe('App.vue', () => {
         const vm = wrapper.vm
         expect(Array.isArray(vm.retailers)).toBe(true);
     })
+    
+    it('loads an array of NSW orders data', () => {
+        const wrapper = shallowMount(AppView, {})
+        const vm = wrapper.vm
+        expect(Array.isArray(vm.ordersNsw)).toBe(true);
+    })
+    
+    it('loads an array of VIC orders data', () => {
+        const wrapper = shallowMount(AppView, {})
+        const vm = wrapper.vm
+        expect(Array.isArray(vm.ordersVic)).toBe(true);
+    })
 })

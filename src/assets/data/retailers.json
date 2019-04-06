@@ -1,0 +1,56 @@
+[
+  {
+    "retailerId": 33,
+    "name": "Uncle Bob's Discount Goods",
+    "region": "NSW",
+    "active": true
+  },
+  {
+    "retailerId": 39,
+    "name": "IGA Carrum",
+    "region": "VIC",
+    "active": true
+  },
+  {
+    "retailerId": 44,
+    "name": "Food Express Bondi",
+    "region": "NSW",
+    "active": true
+  },
+  {
+    "retailerId": 48,
+    "name": "Foodworks Bentleigh",
+    "region": "VIC",
+    "active": false
+  },
+  {
+    "retailerId": 54,
+    "name": "Leisure Life",
+    "region": "NSW",
+    "active": true
+  },
+  {
+    "retailerId": 57,
+    "name": "Supabarn Crace",
+    "region": "NSW",
+    "active": true
+  },
+  {
+    "retailerId": 58,
+    "name": "Epic Cash and Carry",
+    "region": "VIC",
+    "active": true
+  },
+  {
+    "retailerId": 70,
+    "name": "Vic's Fresh IGA",
+    "region": "NSW",
+    "active": true
+  },
+  {
+    "retailerId": 72,
+    "name": "Noel's Fresh IGA",
+    "region": "VIC",
+    "active": true
+  }
+]
