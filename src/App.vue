@@ -31,8 +31,8 @@ export default {
     }
   },
   computed: {
-    activeRetailers: () => {
-      return retailers.filter(value => value.active === true)
+    activeRetailers: function () {
+      return this.retailers.filter(value => value.active === true)
     }
   }
 }

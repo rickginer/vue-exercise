@@ -30,10 +30,28 @@ describe('App.vue', () => {
             expect(wrapper.html()).toContain('How many **active** retailers do we have?')
         })
 
-        it('has a subset of data containing activeRetailers', () => {
+        it('activeRetailers has a subset of only "active" retailers', () => {
             const wrapper = shallowMount(AppView, {})
+            wrapper.setData({
+                retailers: [
+                    {
+                        "retailerId": 1,
+                        "active": true
+                    },
+                    {
+                        "retailerId": 2,
+                        "active": true
+                    },
+                    {
+                        "retailerId": 3,
+                        "active": false
+                    }
+                ]
+            });
             const vm = wrapper.vm
-            expect(Array.isArray(vm.activeRetailers)).toBe(true);
+            
+            expect(vm.retailers).toHaveLength(3)
+            expect(vm.activeRetailers).toHaveLength(2)
         })
         
     })
