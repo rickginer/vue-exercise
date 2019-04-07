@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+
     <Card>
       <template slot="title">
         How many **active** retailers do we have?
@@ -9,6 +10,7 @@
         {{ activeRetailers.length }}
       </template>
     </Card>
+
     <Card>
       <template slot="title">
         Which store in the **VIC** region has never placed an order?
@@ -22,6 +24,18 @@
         </ul>
       </template>
     </Card>
+
+    <Card>
+      <template slot="title">
+        Which **active** retailer ordered the greatest quantity of *Gladiator Snack Bags*?
+      </template>
+
+      <template slot="content">
+        {{ getRetailerWithMaxOrdersForProduct('P10000335')
+         }}
+      </template>
+    </Card>
+
   </div>
 </template>
 <script>
@@ -40,12 +54,15 @@ export default {
     return {
       retailers: retailers,
       ordersVic: ordersVic,
-      ordersNsw: ordersNsw
+      ordersNsw: ordersNsw      
     }
   },
   computed: {
     activeRetailers: function () {
       return this.retailers.filter(retailer => retailer.active === true)
+    },
+    ordersCombined: function() {
+      return this.ordersNsw.concat(this.ordersVic)
     }
   },
   methods: {
@@ -59,6 +76,40 @@ export default {
         }
       });
       return retailersWithNoOrder;
+    },
+    getProductOrdersByRetailer: function (productCode) {
+      // TODO: make this method more functional
+      let orders = this.ordersCombined;
+      let productOrders = [];
+      this.activeRetailers.forEach(function (retailer)  {
+        let qty = 0;
+        let retailersOrders = orders.filter(order => order.retailerId === retailer.retailerId);
+        retailersOrders.forEach(function (order) {
+          order.items.forEach(function(item) {
+            if (item.productCode === productCode) {
+              qty += item.orderedQuantity;
+            }
+          });
+        });
+        if(qty > 0) {
+          productOrders.push(
+            {
+              retailerId: retailer.retailerId,
+              retailerName: retailer.name,
+              productQty: qty
+            }
+          )
+        }
+      });
+      return productOrders;
+    },
+    getRetailerWithMaxOrdersForProduct: function (productCode) {
+      let products = this.getProductOrdersByRetailer(productCode);
+      return products.length ?
+        this.getProductOrdersByRetailer(productCode)
+          .reduce((prev, current) => (prev.productQty > current.productQty) ? prev : current)
+          .retailerName
+        : null;      
     }
   }
 }
