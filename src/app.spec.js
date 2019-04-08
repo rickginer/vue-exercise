@@ -275,4 +275,71 @@ describe('App.vue', () => {
 
     })
 
+    describe ('Question: What is the total order amount, grouped by **region**?', () => {
+        let wrapper, vm;
+        beforeEach(() => {
+            wrapper = shallowMount(AppView, {})
+            vm = wrapper.vm
+            wrapper.setData({
+                ordersNsw: [
+                    {
+                        "orderId": 1,
+                        "items": [
+                            {
+                            "productCode": "P10142837",
+                            "productDescription": "KLEENEX TOILET PAPER 9PK (PALLET) X 160",
+                            "orderedQuantity": 3,
+                            "itemPriceExGst": 10
+                            },
+                            {
+                            "productCode": "P10000052",
+                            "productDescription": "AUTUMN FIELDS PEARS IN JUICE 4X125G X 12",
+                            "orderedQuantity": 2,
+                            "itemPriceExGst": 10
+                            }
+                        ]
+                    },
+                    {
+                        "orderId": 2,
+                        "items": [
+                            {
+                            "productCode": "P10142837",
+                            "productDescription": "KLEENEX TOILET PAPER 9PK (PALLET) X 160",
+                            "orderedQuantity": 1,
+                            "itemPriceExGst": 50
+                            }
+                        ]
+                    }
+                ],
+                ordersVic: [
+                    {
+                        "orderId": 3,
+                        "items": [
+                            {
+                            "productCode": "P10142837",
+                            "productDescription": "KLEENEX TOILET PAPER 9PK (PALLET) X 160",
+                            "orderedQuantity": 2,
+                            "itemPriceExGst": 25
+                            }
+                        ]
+                    }
+                ]
+            });
+        })
+        
+        it('orderTotals method should return array of all regions and their spend', () => {
+            let expected = [
+                {
+                    'regionName': 'VIC',
+                    'totalSpend': 50
+                },
+                {
+                    'regionName': 'NSW',
+                    'totalSpend': 100
+                }
+            ];
+            expect(vm.orderTotals()).toEqual(expected);
+        });
+    })
+
 })

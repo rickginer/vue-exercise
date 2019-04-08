@@ -36,6 +36,20 @@
       </template>
     </Card>
 
+    <Card>
+      <template slot="title">
+        What is the total order amount, grouped by **region**?
+      </template>
+
+      <template slot="content">
+        <ul>
+          <li v-for="(region) in orderTotals()" :key="region.regionName">
+            {{ region.regionName }} : ${{ region.totalSpend.toLocaleString() }} + GST
+          </li>
+        </ul>
+      </template>
+    </Card>
+
   </div>
 </template>
 <script>
@@ -110,6 +124,28 @@ export default {
           .reduce((prev, current) => (prev.productQty > current.productQty) ? prev : current)
           .retailerName
         : null;      
+    },
+    totalByRegion: function (regionOrders) {
+      // TODO use Reduce here
+      let total = 0;
+      regionOrders.forEach( function (order) {
+        order.items.forEach( function (item) {
+          total += item.orderedQuantity * (item.itemPriceExGst * 100) // convert to cents to avoid floating number issue
+        })
+      })
+      return total;
+    },
+    orderTotals: function () {
+      return [
+        {
+          'regionName': 'VIC',
+          'totalSpend': this.totalByRegion(this.ordersVic) / 100 // convert from cents to dollars
+        },
+        {
+          'regionName': 'NSW',
+          'totalSpend': this.totalByRegion(this.ordersNsw) / 100
+        }
+      ]
     }
   }
 }
