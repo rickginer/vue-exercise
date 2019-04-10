@@ -46,37 +46,6 @@ describe('App.vue', () => {
         })
     })
 
-    describe('Question: How many **active** retailers do we have?', () => {
-
-        it('renders question to view', () => {
-            const wrapper = mount(AppView, {})
-            expect(wrapper.html()).toContain('How many **active** retailers do we have?')
-        })
-
-        it('activeRetailers has a subset of only "active" retailers', () => {
-            const wrapper = shallowMount(AppView, {})
-            const vm = wrapper.vm
-            wrapper.setData({
-                retailers: [
-                    {
-                        "retailerId": 1,
-                        "active": true
-                    },
-                    {
-                        "retailerId": 2,
-                        "active": true
-                    },
-                    {
-                        "retailerId": 3,
-                        "active": false
-                    }
-                ]
-            });
-            
-            expect(vm.activeRetailers).toHaveLength(2)
-        })
-        
-    })
 
     describe('Question: Which store in the **VIC** region has never placed an order?', () => {
 

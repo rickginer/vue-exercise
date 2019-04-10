@@ -7,7 +7,7 @@
       </template>
 
       <template slot="content">
-        {{ activeRetailers.length }}
+        {{ activeRetailersLength }}
       </template>
     </Card>
 
@@ -53,11 +53,8 @@
   </div>
 </template>
 <script>
+import store from '@/store'
 import Card from './components/card/Card.vue'
-
-import retailers from './assets/data/retailers'
-import ordersVic from './assets/data/orders/vic'
-import ordersNsw from './assets/data/orders/nsw'
 
 export default {
   name: 'app',
@@ -66,14 +63,17 @@ export default {
   },
   data() {
     return {
-      retailers: retailers,
-      ordersVic: ordersVic,
-      ordersNsw: ordersNsw      
+      retailers: store.state.retailers, // TODO once all logic moved to store, won't need to directly reference state data here
+      ordersVic: store.state.ordersVic,
+      ordersNsw: store.state.ordersNsw      
     }
   },
   computed: {
+    activeRetailersLength: function () {
+      return store.getters.activeRetailersLength;
+    },
     activeRetailers: function () {
-      return this.retailers.filter(retailer => retailer.active === true)
+      return store.getters.activeRetailers;
     },
     ordersCombined: function() {
       return this.ordersNsw.concat(this.ordersVic)
