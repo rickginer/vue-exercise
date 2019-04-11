@@ -50,10 +50,27 @@
       </template>
     </Card>
 
+    <Card>
+      <template slot="title">
+        Which retailer has the oldest order?
+      </template>
+
+      <template slot="content">
+
+        <ul>
+          <li v-for="(order) in oldestOrders" :key="order.orderId">
+            {{ order.retailerName }} : {{ order.orderDate }}
+          </li>
+        </ul>
+      </template>
+    </Card>
+
+
+
   </div>
 </template>
 <script>
-import store from '@/store'
+
 import Card from './components/card/Card.vue'
 import { mapGetters } from 'vuex'
 
@@ -70,7 +87,8 @@ export default {
       'activeRetailersLength',
       'getRetailerWithMaxOrdersForProduct',
       'hasNoOrder',
-      'orderTotals'
+      'orderTotals',
+      'oldestOrders'
     ])
   },
   methods: {}

@@ -284,5 +284,46 @@ describe('getters', () => {
             expect(store.getters.orderTotals()).toEqual(expected);
         });
     })
+
+    describe('oldestOrders', () => {
+        beforeEach(() => {
+            store.replaceState({
+                ordersNsw: [
+                    {
+                        "orderId": 1,
+                        "orderDate": "2019-01-15",
+                        "retailerId": 1,
+                    },
+                    {
+                        "orderId": 2,
+                        "orderDate": "2019-01-14",
+                        "retailerId": 2,
+                    },
+                    {
+                        "orderId": 3,
+                        "orderDate": "2019-01-16",
+                        "retailerId": 1,
+                    }
+                ],
+                ordersVic: [],
+                retailers: [                    
+                    {
+                        "retailerId": 1,
+                        "name": "Retailer 1"
+                    },
+                    {
+                        "retailerId": 2,
+                        "name": "Retailer 2"
+                    }
+                ]
+            });
+        })
+        it('should return oldest order object', () => {
+            expect(store.getters.oldestOrders[0].orderId).toEqual(2)
+        })
+        it('should have added retailers name to object', () => {
+            expect(store.getters.oldestOrders[0].retailerName).toEqual('Retailer 2')
+        })
+    })
 })
              

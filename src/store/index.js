@@ -71,7 +71,7 @@ export default new Vuex.Store({
       return retailersWithNoOrder;
     },
     
-    totalByRegion: (state) => (regionOrders) => {
+    totalByRegion: () => (regionOrders) => {
       // TODO use Reduce here
       let total = 0;
       regionOrders.forEach( function (order) {
@@ -92,7 +92,19 @@ export default new Vuex.Store({
           'totalSpend': getters.totalByRegion(state.ordersNsw) / 100
         }
       ]
-    }
+    },
+    oldestOrders: (state, getters) => {
+      return getters.ordersCombined.filter( e => { 
+        return new Date( e.orderDate ).getTime() == new Date(Math.min.apply(null, getters.ordersCombined.map( e => {
+          return new Date(e.orderDate);
+        }))).getTime();
+        // iterate through orders, add retailer name
+      }).map((order) => {
+        order.retailerName = state.retailers.filter(retailer => retailer.retailerId === order.retailerId)[0].name;
+        return order;
+      });
+    },
+
   },
   mutations: {},
   actions: {}
