@@ -387,7 +387,68 @@ describe('getters', () => {
                 expect(store.getters.mostSoldProduct).toEqual('product 2') 
             })
         })
-    
+    })
+
+    describe('biggestSpender', () => {
+        // TODO add test to confirm mathis in spend calculation
+        it('should return array containing IR of retailer who has spent the most', () => {
+            store.replaceState({
+                ordersNsw: [
+                    {
+                        "retailerId": 1,
+                        "items": [
+                            {
+                            "orderedQuantity": 10,
+                            "itemPriceExGst": 17.50
+                            }
+                        ]
+                    },
+                    {
+                        "retailerId": 2,
+                        "items": [
+                            {
+                            "orderedQuantity": 10,
+                            "itemPriceExGst": 17.50
+                            },
+                            {
+                            "orderedQuantity": 2,
+                            "itemPriceExGst": 17.50
+                            }
+                        ]
+                    },
+                    {
+                        "retailerId": 1,
+                        "items": [
+                            {
+                            "orderedQuantity": 1,
+                            "itemPriceExGst": 17.50
+                            },
+                            {
+                            "orderedQuantity": 2,
+                            "itemPriceExGst": 17.50
+                            }
+                        ]
+                    }
+                ],
+                ordersVic: [],
+                retailers: [
+                    {
+                        "retailerId": 1,
+                        "name": 'retailer 1',
+                        "active": true
+                    },
+                    {
+                        "retailerId": 2,
+                        "name": 'retailer 2',
+                        "active": true
+                    }
+                ]
+            })
+
+            const expected = 'retailer 1';
+            expect(store.getters.biggestSpender).toEqual(expected)
+
+        })
     })
 
 })

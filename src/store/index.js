@@ -26,10 +26,10 @@ export default new Vuex.Store({
       return state.ordersNsw.concat(state.ordersVic)
     },
     allProducts : (state, getters) => {
-      let uniqueCodes = [];
+      let uniqueProducts = [];
       getters.allOrders.reduce(function(acc, value) {
         value.items.reduce(function(acc, value) {
-          let objIndex = uniqueCodes.findIndex((product => product.productCode == value.productCode));
+          let objIndex = uniqueProducts.findIndex((product => product.productCode == value.productCode));
           if (objIndex !== -1) {
             acc[objIndex].totalOrdered += value.orderedQuantity
           } else {
@@ -41,9 +41,9 @@ export default new Vuex.Store({
             )
           }
           return acc;
-        }, uniqueCodes);
-      }, uniqueCodes); 
-      return uniqueCodes;
+        }, uniqueProducts);
+      }, uniqueProducts); 
+      return uniqueProducts;
     },
     getProductOrdersByRetailer :  (state, getters) => (productCode) => {
       // TODO: make this method more functional
@@ -95,7 +95,7 @@ export default new Vuex.Store({
       let total = 0;
       regionOrders.reduce(function(acc, value) {
         value.items.reduce(function(acc, value) {
-          total += value.orderedQuantity * (value.itemPriceExGst * 100) // convert to cents to avoid floating number issue;
+          total += value.orderedQuantity * Math.round((value.itemPriceExGst * 100) * 1e12) / 1e12// convert to cents to avoid floating number issue;
           return acc
         }, total)
       }, total)
@@ -129,6 +129,46 @@ export default new Vuex.Store({
       return getters.allProducts
           .reduce((prev, current) => (prev.totalOrdered > current.totalOrdered) ? prev : current)
           .productCode      
+    },
+    biggestSpender: (state, getters) => {
+      // TODO break up into smaller methods
+      let retailersSpend = []
+
+      getters.allOrders.reduce(function(prevOrder, currentOrder) {
+        currentOrder.items.reduce(function(prevItem, currentItem) {
+          let objIndex = retailersSpend.findIndex((retailer => retailer.retailerId == currentOrder.retailerId));
+          let spend =  currentItem.orderedQuantity * Math.round((currentItem.itemPriceExGst * 100)  * 1e12) / 1e12 // convert to cents. No need to add GST
+
+          if (objIndex !== -1) {
+            prevItem[objIndex].totalSpend += spend
+          } else {
+            prevItem.push(
+              {
+                retailerId: currentOrder.retailerId,
+                totalSpend: spend
+              }
+            )
+          }
+          return prevItem;
+        }, retailersSpend)
+        
+      }, retailersSpend)
+
+      // Filter by active retailers
+      retailersSpend = retailersSpend.reduce(function(acc, current) {
+        let active = state.retailers.filter(retailer => retailer.retailerId === current.retailerId)[0].active;
+        if(active) {
+          acc.push({
+            totalSpend: current.totalSpend,
+            retailerName: state.retailers.filter(retailer => retailer.retailerId === current.retailerId)[0].name
+          })
+        }
+        return acc;
+      }, []);
+
+      return retailersSpend
+          .reduce((prev, current) => (prev.totalSpend > current.totalSpend) ? prev : current)
+          .retailerName
     }
   },
   mutations: {},

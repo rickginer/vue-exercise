@@ -75,6 +75,16 @@
       </template>
     </Card>
 
+    <Card>
+      <template slot="title">
+        Given an orders' total is calculated as `(orderedQuantity * itemPriceExGst)` + 10% GST, which **active** store has ordered the most by order total
+      </template>
+
+      <template slot="content">
+        {{ biggestSpender }}
+      </template>
+    </Card>
+
 
 
   </div>
@@ -99,7 +109,8 @@ export default {
       'hasNoOrder',
       'orderTotals',
       'oldestOrders',
-      'mostSoldProduct'
+      'mostSoldProduct',
+      'biggestSpender'
     ])
   },
   methods: {}
