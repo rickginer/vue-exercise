@@ -65,6 +65,16 @@
       </template>
     </Card>
 
+    <Card>
+      <template slot="title">
+        What is the highest selling product by total `orderedQuantity`?
+      </template>
+
+      <template slot="content">
+        {{ mostSoldProduct }}
+      </template>
+    </Card>
+
 
 
   </div>
@@ -88,7 +98,8 @@ export default {
       'getRetailerWithMaxOrdersForProduct',
       'hasNoOrder',
       'orderTotals',
-      'oldestOrders'
+      'oldestOrders',
+      'mostSoldProduct'
     ])
   },
   methods: {}

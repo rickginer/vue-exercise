@@ -22,12 +22,32 @@ export default new Vuex.Store({
     activeRetailersLength : (state, getters) => {
       return getters.activeRetailers.length
     },
-    ordersCombined : state => {
+    allOrders : state => {
       return state.ordersNsw.concat(state.ordersVic)
+    },
+    allProducts : (state, getters) => {
+      let uniqueCodes = [];
+      getters.allOrders.reduce(function(acc, value) {
+        value.items.reduce(function(acc, value) {
+          let objIndex = uniqueCodes.findIndex((product => product.productCode == value.productCode));
+          if (objIndex !== -1) {
+            acc[objIndex].totalOrdered += value.orderedQuantity
+          } else {
+            acc.push(
+              {
+                productCode: value.productCode,
+                totalOrdered: value.orderedQuantity
+              }
+            )
+          }
+          return acc;
+        }, uniqueCodes);
+      }, uniqueCodes); 
+      return uniqueCodes;
     },
     getProductOrdersByRetailer :  (state, getters) => (productCode) => {
       // TODO: make this method more functional
-      let orders = getters.ordersCombined;
+      let orders = getters.allOrders;
       let productOrders = [];
       getters.activeRetailers.forEach(function (retailer)  {
         let qty = 0;
@@ -72,13 +92,13 @@ export default new Vuex.Store({
     },
     
     totalByRegion: () => (regionOrders) => {
-      // TODO use Reduce here
       let total = 0;
-      regionOrders.forEach( function (order) {
-        order.items.forEach( function (item) {
-          total += item.orderedQuantity * (item.itemPriceExGst * 100) // convert to cents to avoid floating number issue
-        })
-      })
+      regionOrders.reduce(function(acc, value) {
+        value.items.reduce(function(acc, value) {
+          total += value.orderedQuantity * (value.itemPriceExGst * 100) // convert to cents to avoid floating number issue;
+          return acc
+        }, total)
+      }, total)
       return total;
     },
     orderTotals: (state, getters) => () => {
@@ -94,8 +114,8 @@ export default new Vuex.Store({
       ]
     },
     oldestOrders: (state, getters) => {
-      return getters.ordersCombined.filter( e => { 
-        return new Date( e.orderDate ).getTime() == new Date(Math.min.apply(null, getters.ordersCombined.map( e => {
+      return getters.allOrders.filter( e => { 
+        return new Date( e.orderDate ).getTime() == new Date(Math.min.apply(null, getters.allOrders.map( e => {
           return new Date(e.orderDate);
         }))).getTime();
         // iterate through orders, add retailer name
@@ -104,7 +124,12 @@ export default new Vuex.Store({
         return order;
       });
     },
-
+    mostSoldProduct: (state, getters) => {
+      // TODO should probably return an array in case there are multiple with the same count
+      return getters.allProducts
+          .reduce((prev, current) => (prev.totalOrdered > current.totalOrdered) ? prev : current)
+          .productCode      
+    }
   },
   mutations: {},
   actions: {}

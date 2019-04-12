@@ -44,7 +44,7 @@ describe('getters', () => {
 
     })
 
-    it('ordersCombined should combine all orders for a particular product and group by retailer', () => {
+    it('allOrders should combine all orders for a particular product and group by retailer', () => {
         store.replaceState({
             ordersNsw: [
                 {"orderId": 1}
@@ -57,7 +57,7 @@ describe('getters', () => {
             {"orderId": 1},
             {"orderId": 2}
         ]
-        expect(store.getters.ordersCombined).toEqual(expected);
+        expect(store.getters.allOrders).toEqual(expected);
     });
     
     describe('Which **active** retailer ordered the greatest quantity of *Gladiator Snack Bags*?', () => {
@@ -325,5 +325,69 @@ describe('getters', () => {
             expect(store.getters.oldestOrders[0].retailerName).toEqual('Retailer 2')
         })
     })
+
+    describe('related to retrieving most sold products', () => {
+
+        beforeEach(() => {
+            store.replaceState({
+                ordersNsw: [
+                    {
+                        "orderId": 1,
+                        "items": [
+                            {
+                            "productCode": "product 1",
+                            "orderedQuantity": 1
+                            },
+                            {
+                            "productCode": "product 2",
+                            "orderedQuantity": 2
+                            }
+                        ]
+                    },
+                    {
+                        "orderId": 1,
+                        "items": [
+                            {
+                            "productCode": "product 1",
+                            "orderedQuantity": 1
+                            },
+                            {
+                            "productCode": "product 2",
+                            "orderedQuantity": 2
+                            }
+                        ]
+                    }
+                ],
+                ordersVic: [],
+                retailers: []
+            })
+        })
+
+        describe('allProducts', () => {
+            it('should return array containing a single entry for each product code and the quantity sold', () => {
+                const expected = [{
+                    "productCode": "product 1",
+                    "totalOrdered": 2
+                  },
+                  {
+                    "productCode": "product 2",
+                    "totalOrdered": 4
+                  }
+                ]
+                expect(store.getters.allProducts).toEqual(expected)
+            });
+        })
+
+        describe('mostSoldProduct', () => {
+            it('should call getters.allProducts', () => {
+                // TODO mock allProducts
+            })
+
+            it('should return productCode of most sold product', () => {
+                expect(store.getters.mostSoldProduct).toEqual('product 2') 
+            })
+        })
+    
+    })
+
 })
-             
